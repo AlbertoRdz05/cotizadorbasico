@@ -592,26 +592,50 @@
   });
 
   // Función para convertir números a letras
-  function numeroALetras(numero) {
-    const unidades = ["CERO", "UNO", "DOS", "TRES", "CUATRO", "CINCO", "SEIS", "SIETE", "OCHO", "NUEVE"];
-    const decenas = ["", "", "VEINTE", "TREINTA", "CUARENTA", "CINCUENTA", "SESENTA", "SETENTA", "OCHENTA", "NOVENTA"];
-    const especiales = { 10: "DIEZ", 11: "ONCE", 12: "DOCE", 13: "TRECE", 14: "CATORCE", 15: "QUINCE" };
+ 
+function numeroALetras(num) {
+    const unidades = ['','UNO','DOS','TRES','CUATRO','CINCO','SEIS','SIETE','OCHO','NUEVE'];
+    const especiales = ['DIEZ','ONCE','DOCE','TRECE','CATORCE','QUINCE','DIECISÉIS','DIECISIETE','DIECIOCHO','DIECINUEVE'];
+    const decenas = ['','DIEZ','VEINTE','TREINTA','CUARENTA','CINCUENTA','SESENTA','SETENTA','OCHENTA','NOVENTA'];
+    const centenas = ['','CIENTO','DOSCIENTOS','TRESCIENTOS','CUATROCIENTOS','QUINIENTOS','SEISCIENTOS','SETECIENTOS','OCHOCIENTOS','NOVECIENTOS'];
 
-    const entero = Math.floor(numero);
-    const centavos = Math.round((numero - entero) * 100);
-
-    function convertir(n) {
-      if (especiales[n]) return especiales[n];
-      if (n < 10) return unidades[n];
-      if (n < 20) return "DIECI" + unidades[n - 10].toLowerCase();
-      const d = Math.floor(n / 10);
-      const u = n % 10;
-      return decenas[d] + (u > 0 ? " Y " + unidades[u] : "");
+    function convertirGrupo(n) {
+        let output = '';
+        if (n == '100') return 'CIEN';
+        if (n[0] !== '0') output += centenas[parseInt(n[0])] + ' ';
+        let k = parseInt(n.substring(1));
+        if (k < 10) output += unidades[k];
+        else if (k < 20) output += especiales[k - 10];
+        else {
+            output += decenas[parseInt(n[1])];
+            if (n[2] !== '0') output += ' Y ' + unidades[parseInt(n[2])];
+        }
+        return output.trim();
     }
 
-    const letras = convertir(entero) || "CERO";
-    return `${letras.toUpperCase()} con ${centavos.toString().padStart(2, '0')}/100`;
-  }
+    num = parseFloat(num).toFixed(2);
+    const [entero, decimales] = num.split('.');
+    let numStr = parseInt(entero).toString().padStart(9, '0');
+    const millones = convertirGrupo(numStr.substring(0,3));
+    const miles = convertirGrupo(numStr.substring(3,6));
+    const cientos = convertirGrupo(numStr.substring(6));
+
+    let resultado = '';
+    if (millones !== '') resultado += millones + ' MILLONES ';
+    if (miles !== '') resultado += miles + ' MIL ';
+    if (cientos !== '') resultado += cientos;
+
+    resultado = resultado.trim();
+    if (resultado === '') resultado = 'CERO';
+
+    resultado += ' BALBOAS';
+
+    if (parseInt(decimales) > 0) {
+        resultado += ' CON ' + decimales + '/100';
+    }
+
+    return resultado;
+}
 </script>
 </body>
 </html>
