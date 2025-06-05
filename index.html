@@ -568,11 +568,10 @@ const opt = {
 
 
     // Generar PDF
-    html2pdf().set(opt).from(element).save()
-      .catch(err => {
-        console.error('Error al generar PDF:', err);
-        alert('Error al generar PDF. Por favor intente nuevamente.');
-      });
+  function generarPDF() {
+    const element = document.body; // Puedes cambiar esto por el ID de tu contenedor principal si deseas algo más específico
+
+    html2pdf().from(element).save();
   }
 
   // Inicialización al cargar la página
