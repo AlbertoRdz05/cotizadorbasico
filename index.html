@@ -252,13 +252,14 @@
         display: table-row !important;
       }
 
-      table {
-        page-break-inside: avoid !important;
-      }
-      tr {
-        page-break-inside: avoid !important;
-        page-break-after: auto !important;
-      }
+table {
+  page-break-inside: auto;
+}
+tr {
+  page-break-inside: avoid;
+  page-break-after: auto;
+}
+
 
       @page {
         size: auto;
@@ -550,19 +551,21 @@
     element.appendChild(cotizacionClone);
     
     // Configuración de html2pdf
-    const opt = {
-      margin: 10,
-      filename: `Cotizacion_${document.getElementById('nombre-cliente').value || 'cliente'}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { 
-        scale: 2,
-        scrollX: 0,
-        scrollY: 0,
-        windowWidth: element.scrollWidth,
-        windowHeight: element.scrollHeight
-      },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
+const opt = {
+  margin: 10,
+  filename: `Cotizacion_${document.getElementById('nombre-cliente').value || 'cliente'}.pdf`,
+  image: { type: 'jpeg', quality: 0.98 },
+  html2canvas: {
+    scale: 2,
+    scrollX: 0,
+    scrollY: 0,
+    windowWidth: element.scrollWidth,
+    windowHeight: element.scrollHeight
+  },
+  jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+  pagebreak: { mode: ['avoid-all'] }
+};
+
 
     // Generar PDF
     html2pdf().set(opt).from(element).save()
